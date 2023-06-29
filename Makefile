@@ -5,5 +5,5 @@ run:
 	python -m src.main
 
 test:
-	python -m coverage run -m unittest -v src/*_test.py && python -m coverage html
+	python -m coverage run -m unittest -v src/*_test.py && python -m coverage html --omit="*_test.py"
 
