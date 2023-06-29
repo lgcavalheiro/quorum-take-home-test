@@ -1,4 +1,5 @@
 import unittest
+from os.path import exists
 from .main import VotesProcessor
 
 
@@ -87,3 +88,11 @@ class MainTest(unittest.TestCase):
         self.assertEqual(bill_b['primary_sponsor'], 'Unknown')
         self.assertEqual(bill_b['supporter_count'], 13)
         self.assertEqual(bill_b['opposer_count'], 6)
+
+    def test_save_report_to_disk(self):
+        VP = VotesProcessor()
+        legislator_report = VP.generate_legislator_report(to_disk=True)
+        bill_report = VP.generate_bill_report(to_disk=True)
+
+        self.assertTrue(exists('output/legislators-support-oppose-count.csv'))
+        self.assertTrue(exists('output/bills.csv'))

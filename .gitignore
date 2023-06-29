@@ -2,6 +2,7 @@
 dump.txt
 *.pdf
 output
+to-email/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
