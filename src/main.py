@@ -37,6 +37,36 @@ class VotesProcessor():
 
         return report
 
+    def generate_bill_report(self):
+        report = pd.DataFrame(
+            columns=['id', 'title', 'supporter_count', 'opposer_count', 'primary_sponsor'])
+
+        for index, bill in self.bills.iterrows():
+            report_row = {'id': index, 'title': bill['title'],
+                          'supporter_count': 0, 'opposer_count': 0, 'primary_sponsor': 'Unknown'}
+
+            try:
+                sponsor = self.legislators.loc[bill["sponsor_id"]]
+                if (not sponsor.empty):
+                    report_row["primary_sponsor"] = sponsor['name']
+            except KeyError:
+                print(
+                    f'Warning: sponsor_id {bill["sponsor_id"]} did not match any legislator id')
+
+            vote_id = self.votes.loc[lambda df: df["bill_id"]
+                                     == index].index.item()
+            votes = self.vote_results.loc[lambda df: df["vote_id"] == vote_id]
+
+            supporters = votes.loc[lambda df: df["vote_type"] == YEA]
+            opposers = votes.loc[lambda df: df["vote_type"] == NAY]
+
+            report_row['supporter_count'] = len(supporters.index)
+            report_row['opposer_count'] = len(opposers.index)
+
+            report.loc[len(report)] = report_row
+
+        return report
+
 
 if __name__ == '__main__':
     pass
